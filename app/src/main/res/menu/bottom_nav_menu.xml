@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/newfeeds"
+        android:enabled="true"
+        android:icon="@drawable/ic_newfeed_24dp"
+        android:title="@string/new_feed"/>
+    <item
+        android:id="@+id/funny"
+        android:title="Funny"
+        android:icon="@drawable/ic_funny_24dp"/>
+    <item
+        android:id="@+id/sports"
+        android:icon="@drawable/ic_sports_24dp"
+        android:title="Sports"/>
+
+</menu>
