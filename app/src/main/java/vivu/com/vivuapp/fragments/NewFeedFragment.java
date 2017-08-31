@@ -15,8 +15,10 @@ import vivu.com.vivuapp.R;
 import vivu.com.vivuapp.adapter.ItemAdapter;
 import vivu.com.vivuapp.asyn.LoadData;
 import vivu.com.vivuapp.model.Item;
+import vivu.com.vivuapp.views.DataRecycleV;
 
 public class NewFeedFragment extends Fragment {
+    DataRecycleV dataRecycleV;
     ItemAdapter itemAdapter;
     RecyclerView rv;
     private static final String newfeed = "http://vnexpress.net/rss/tin-moi-nhat.rss";
@@ -36,15 +38,24 @@ public class NewFeedFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_new_feed, container, false);
         rv = (RecyclerView) view.findViewById(R.id.rv_item);
-        rv.setHasFixedSize(true);
+        if (dataRecycleV.isConnected(getContext())){
+            itemAdapter = new ItemAdapter(getContext(), new ArrayList<Item>());
+            RecycleViewData(rv, itemAdapter);
+            new LoadData(itemAdapter,getContext(), "newfeed").execute(newfeed, newFeed2);
+        }else {
+            itemAdapter = new ItemAdapter(getContext(), dataRecycleV.arrayListItem("newfeed", getContext()));
+            RecycleViewData(rv, itemAdapter);
+        }
 
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        rv.setLayoutManager(llm);
-        itemAdapter = new ItemAdapter(getContext(),new ArrayList<Item>());
-        rv.setAdapter(itemAdapter);
-        new LoadData(itemAdapter,getContext()).execute(newfeed, newFeed2);
         return view;
     }
 
+    private void RecycleViewData(RecyclerView rv, ItemAdapter itemAdapters){
+
+        rv.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        rv.setLayoutManager(llm);
+        rv.setAdapter(itemAdapters);
+    }
 
 }

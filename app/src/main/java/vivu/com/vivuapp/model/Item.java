@@ -3,21 +3,31 @@ package vivu.com.vivuapp.model;
 
 import android.widget.ImageView;
 
-public class Item {
+import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
+import io.realm.annotations.PrimaryKey;
+
+public class Item extends RealmObject{
+    @PrimaryKey
+    @Ignore
+    private int id;
     private String title;
+
     private String link;
     private String imageURL;
     private String pubDate;
 
+    private String theloai;
 
     public Item() {
     }
 
-    public Item(String title, String link, String imageURL, String pubDate) {
+    public Item(String title, String link, String imageURL, String pubDate, String theloai) {
         this.title = title;
         this.link = link;
         this.imageURL = imageURL;
         this.pubDate = pubDate;
+        this.theloai = theloai;
     }
 
     public String getTitle() {
@@ -50,5 +60,21 @@ public class Item {
 
     public void setPubDate(String pubDate) {
         this.pubDate = pubDate;
+    }
+
+    public String getTheloai() {
+        return theloai;
+    }
+
+    public void setTheloai(String theloai) {
+        this.theloai = theloai;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

@@ -13,6 +13,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import io.realm.Realm;
 import vivu.com.vivuapp.adapter.ItemAdapter;
 import vivu.com.vivuapp.model.Item;
 
@@ -26,22 +27,26 @@ public class LoadData extends AsyncTask<String, Void, ArrayList<Item>>{
 
     ItemAdapter itemAdapter;
     Context context;
-
-    public LoadData(ItemAdapter itemAdapter, Context context) {
+    String theloai;
+    private Realm realmBb;
+    public LoadData(ItemAdapter itemAdapter, Context context, String theloai) {
         this.itemAdapter = itemAdapter;
         this.context = context;
+        this.theloai = theloai;
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
         progressDialog = new ProgressDialog(context);
-        Log.i("Context", String.valueOf(context));
+
         progressDialog.setMessage("Loading.....");
         progressDialog.setCancelable(false);
         progressDialog.show();
     }
     private void getData(String url){
+        Realm.init(context);
+
         try {
 
             Document doc = Jsoup.connect(url).get();
@@ -56,8 +61,21 @@ public class LoadData extends AsyncTask<String, Void, ArrayList<Item>>{
 
                 Document docImg = Jsoup.parse(des);
                 String imgURL = docImg.select("img").get(0).attr("src");
+                final Item mItem = new Item(title, link, imgURL, pubDate, theloai);
+                result.add(mItem);
 
-                result.add(new Item(title, link, imgURL, pubDate));
+                realmBb = Realm.getDefaultInstance();
+                realmBb.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        Item save = realm.createObject(Item.class);
+                        save.setTitle(mItem.getTitle());
+                        save.setLink(mItem.getLink());
+                        save.setImageURL(mItem.getImageURL());
+                        save.setPubDate(mItem.getPubDate());
+                        save.setTheloai(theloai);
+                    }
+                });
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -70,8 +88,6 @@ public class LoadData extends AsyncTask<String, Void, ArrayList<Item>>{
             String url = strings[i];
             getData(url);
         }
-
-
         return result;
     }
 
