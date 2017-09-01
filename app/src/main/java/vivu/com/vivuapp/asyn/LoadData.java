@@ -17,10 +17,6 @@ import io.realm.Realm;
 import vivu.com.vivuapp.adapter.ItemAdapter;
 import vivu.com.vivuapp.model.Item;
 
-/**
- * Created by TumPc on 8/29/2017.
- */
-
 public class LoadData extends AsyncTask<String, Void, ArrayList<Item>>{
     ProgressDialog progressDialog;
     ArrayList<Item> result = new ArrayList<>();
